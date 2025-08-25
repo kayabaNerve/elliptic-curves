@@ -13,7 +13,7 @@ use core::{
 };
 use elliptic_curve::{
     bigint::{prelude::*, Limb, Word, U256, U512},
-    ff::{self, Field, PrimeField},
+    ff::{self, Field, FromUniformBytes, PrimeField},
     ops::{Invert, Reduce, ReduceNonZero},
     rand_core::{CryptoRngCore, RngCore},
     scalar::{FromUintUnchecked, IsHigh},
@@ -377,6 +377,12 @@ impl From<u64> for Scalar {
 impl From<u128> for Scalar {
     fn from(k: u128) -> Self {
         Self(k.into())
+    }
+}
+
+impl FromUniformBytes<64> for Scalar {
+    fn from_uniform_bytes(bytes: &[u8; 64]) -> Self {
+        WideScalar::from_bytes(bytes).reduce()
     }
 }
 
